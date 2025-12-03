@@ -17,3 +17,20 @@ cd aurora-proto
 pip install -r requirements.txt
 playwright install chromium
 python demo.py
+
+🔖 Topics
+ai
+llm
+agents
+opensource
+autonomous-agents
+qwen
+vllm
+multimodal
+self-hosted
+copilot
+github-copilot
+agentic-ai
+memory-augmented
+tool-use
+code-generation
