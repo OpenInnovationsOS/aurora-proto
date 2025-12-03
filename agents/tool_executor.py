@@ -1,63 +1,37 @@
-# agents/tools/shell_tool.py
+# agents/tools/code_executor.py
 """
-Shell Tool — Executes shell commands in a Docker sandbox
-- No network access
-- No sudo
-- Limited file system access
-- Timeout enforced
+Code Executor Tool — Runs Python code in Docker sandbox
+- Isolated environment
+- No network
+- Time-limited
+- Returns stdout/stderr
 """
 
 import docker
 import tempfile
 import os
-import json
 
-class ShellTool:
-    name = "shell"
+class CodeExecutorTool:
+    name = "code_executor"
 
-    def __init__(self, sandboxed: bool = True):
-        self.sandboxed = sandboxed
+    def __init__(self):
         self.client = docker.from_env()
-
-        # Pull base image once
         try:
             self.client.images.get("python:3.11-slim")
-        except docker.errors.ImageNotFound:
-            print("Pulling sandbox image...")
+        except:
             self.client.images.pull("python:3.11-slim")
 
-    def run(self, command: str, timeout: int = 30) -> Dict[str, Any]:
-        """Run shell command safely"""
-        if not self.sandboxed:
-            # Unsafe mode — only for local dev
-            import subprocess
-            try:
-                result = subprocess.run(
-                    command,
-                    shell=True,
-                    capture_output=True,
-                    text=True,
-                    timeout=timeout
-                )
-                return {
-                    "stdout": result.stdout,
-                    "stderr": result.stderr,
-                    "exit_code": result.returncode
-                }
-            except Exception as e:
-                return {"error": str(e)}
-
-        # Sandboxed mode (Docker)
+    def run(self, code: str, timeout: int = 30) -> Dict[str, Any]:
+        """Execute Python code safely"""
         with tempfile.TemporaryDirectory() as tmpdir:
-            script_path = os.path.join(tmpdir, "run.sh")
+            script_path = os.path.join(tmpdir, "script.py")
             with open(script_path, "w") as f:
-                f.write(f"#!/bin/bash\n{command}\n")
-            os.chmod(script_path, 0o755)
+                f.write(code)
 
             try:
                 container = self.client.containers.run(
                     "python:3.11-slim",
-                    command=["timeout", str(timeout), "/run.sh"],
+                    command=["timeout", str(timeout), "python", "/script.py"],
                     volumes={tmpdir: {"bind": "/workspace", "mode": "rw"}},
                     working_dir="/workspace",
                     mem_limit="512m",
