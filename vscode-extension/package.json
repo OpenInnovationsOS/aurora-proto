@@ -1,0 +1,30 @@
+{
+  "name": "aurora-proto-copilot",
+  "displayName": "AURORA-Proto Copilot",
+  "description": "Integrate AURORA-Proto v0.1 into VS Code for agentic code generation.",
+  "version": "0.1.0",
+  "publisher": "OpenInnovationsOS",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": ["Programming Languages", "AI"],
+  "activationEvents": ["onCommand:aurora-proto.runAgent"],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "aurora-proto.runAgent",
+        "title": "Run AURORA Agent"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "aurora-proto.runAgent",
+          "when": "editorTextFocus",
+          "group": "navigation"
+        }
+      ]
+    }
+  }
+}
