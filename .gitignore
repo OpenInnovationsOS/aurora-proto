@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+
+# Models & Data
+models/
+*.bin
+*.pt
+*.safetensors
+memory/
+*.db
+*.index
+
+# Docker
+.dockerenv
+docker-compose.override.yml
+
+# Logs
+*.log
+
+# IDE
+.vscode/
+.idea/
