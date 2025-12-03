@@ -1,0 +1,4 @@
+mkdir -p vscode-extension
+cd vscode-extension
+npm init -y
+npm install --save-dev @types/vscode vscode
