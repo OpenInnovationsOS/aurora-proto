@@ -1,0 +1,3 @@
+mkdir -p deploy/helm/aurora-proto
+cd deploy/helm/aurora-proto
+helm create aurora-proto
